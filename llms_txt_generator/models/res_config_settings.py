@@ -11,6 +11,9 @@ class ResConfigSettings(models.TransientModel):
     llms_txt_pages = fields.Selection(related='website_id.llms_txt_pages', readonly=False)
     llms_txt_blog = fields.Selection(related='website_id.llms_txt_blog', readonly=False)
     llms_txt_products = fields.Selection(related='website_id.llms_txt_products', readonly=False)
+    llms_txt_attribution_name = fields.Char(related='website_id.llms_txt_attribution_name', readonly=False)
+    llms_txt_attribution_url = fields.Char(related='website_id.llms_txt_attribution_url', readonly=False)
+    llms_txt_attribution_note = fields.Char(related='website_id.llms_txt_attribution_note', readonly=False)
     llms_txt_has_blog = fields.Boolean(compute='_compute_llms_txt_has_apps')
     llms_txt_has_shop = fields.Boolean(compute='_compute_llms_txt_has_apps')
 

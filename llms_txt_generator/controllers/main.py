@@ -3,6 +3,7 @@ import contextlib
 import datetime
 import re
 import textwrap
+from urllib.parse import quote
 
 from odoo import fields, http
 from odoo.http import request
@@ -23,6 +24,11 @@ def _md_text(text):
     """Collapse whitespace and escape Markdown link delimiters, so a record
     name cannot break out of its list item."""
     return re.sub(r'([\\\[\]])', r'\\\1', ' '.join(text.split()))
+
+
+def _md_url(url):
+    """Percent-encode the characters that would end a Markdown link target."""
+    return quote(url.strip(), safe="/:?#[]@!$&'*+,;=%~")
 
 
 # Lines Markdown reads as headings: "#" or a setext "===" / "---" underline
@@ -144,8 +150,14 @@ class LlmsTxtController(http.Controller):
                 blocks.append("\n".join([f"## {heading}", *links]))
 
         # === Attribution ===
-        optional.append("- [Clevacat](https://cleva.cat): Generated automatically by Clevacat")
-        blocks.append("\n".join(["## Optional", *optional]))
+        if website.llms_txt_attribution_name and website.llms_txt_attribution_url:
+            link = f"- [{_md_text(website.llms_txt_attribution_name)}]({_md_url(website.llms_txt_attribution_url)})"
+            if website.llms_txt_attribution_note:
+                link += f": {_md_text(website.llms_txt_attribution_note)}"
+            optional.append(link)
+
+        if optional:
+            blocks.append("\n".join(["## Optional", *optional]))
 
         return "\n\n".join(blocks) + "\n"
 

@@ -51,6 +51,23 @@
                             </a>
                         </div>
                     </setting>
+                    <setting id="llms_txt_attribution_setting" string="Attribution"
+                             help="Link added to the Optional section. Leave the name or URL empty to remove it.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="col-lg-3 o_light_label" string="Name" for="llms_txt_attribution_name"/>
+                                <field name="llms_txt_attribution_name"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" string="URL" for="llms_txt_attribution_url"/>
+                                <field name="llms_txt_attribution_url" widget="url" placeholder="https://"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" string="Note" for="llms_txt_attribution_note"/>
+                                <field name="llms_txt_attribution_note"/>
+                            </div>
+                        </div>
+                    </setting>
                 </block>
             </xpath>
         </field>

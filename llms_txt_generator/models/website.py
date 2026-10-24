@@ -12,6 +12,7 @@ LLMS_TXT_WEBSITE_FIELDS = {
     'name', 'domain', 'language_ids', 'default_lang_id', 'company_id', 'ecommerce_access', 'homepage_url',
     'llms_txt_title', 'llms_txt_summary', 'llms_txt_details',
     'llms_txt_pages', 'llms_txt_blog', 'llms_txt_products',
+    'llms_txt_attribution_name', 'llms_txt_attribution_url', 'llms_txt_attribution_note',
 }
 
 
@@ -34,6 +35,12 @@ class Website(models.Model):
         LLMS_TXT_SECTION_MODES, "llms.txt Blog Posts", default='include', required=True)
     llms_txt_products = fields.Selection(
         LLMS_TXT_SECTION_MODES, "llms.txt Products", default='include', required=True)
+    llms_txt_attribution_name = fields.Char(
+        "llms.txt Attribution Name", default="Clevacat",
+        help="Attribution link added to the Optional section. Leave the name or URL empty to remove it.")
+    llms_txt_attribution_url = fields.Char("llms.txt Attribution URL", default="https://cleva.cat")
+    llms_txt_attribution_note = fields.Char(
+        "llms.txt Attribution Note", default="Generated automatically by Clevacat")
 
     def _llms_txt_cache_domain(self):
         """Domain of the cached llms.txt of these websites, or of every

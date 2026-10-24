@@ -13,7 +13,7 @@ This file makes it easier for *Large Language Models (LLMs)* such as ChatGPT and
 - Generates an `/llms.txt` file dynamically, updated as soon as pages, blog posts or products change.  
 - Includes published web pages, blog posts and eCommerce products, following the same visibility rules as the sitemap: password-protected, members-only, non-indexed and scheduled content is left out.  
 - Multi-language support: generates URLs for all languages enabled on the website.  
-- Configurable from *Website > Configuration > Settings*: title, summary and details, and whether pages, blog posts and products are listed, moved to the Optional section or left out.  
+- Configurable from *Website > Configuration > Settings*: title, summary and details, whether pages, blog posts and products are listed, moved to the Optional section or left out, and the attribution link.  
 - Each link is described with its SEO description, falling back to the blog post subtitle or teaser and the product sales or eCommerce description.  
 - SEO-friendly format recommended by [llmstxt.org](https://llmstxt.org).  
 - No hardcoding - everything is pulled from your live Odoo site.  
