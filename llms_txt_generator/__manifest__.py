@@ -11,6 +11,7 @@ The file improves **SEO** and helps **large language models (LLMs)** better unde
 Key Features:
 - Published Pages, Blog Posts, and eCommerce Products (if available)
 - Multi-language support
+- Title, summary and details configurable per website, and per-section choice to list, mark as Optional or leave out
 - Fully compliant with llmstxt.org specifications
 - SEO attribution with backlink
 
@@ -24,9 +25,12 @@ Learn more: https://cleva.cat
     'author': "Clevacat",
     'website': "https://cleva.cat",
     'category': 'Website/SEO',
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['website'],
-    'data': [],
+    'data': [
+        'data/llms_txt_data.xml',
+        'views/res_config_settings_views.xml',
+    ],
     'images': ['images/main_screenshot.png'],
     'installable': True,
     'application': False,

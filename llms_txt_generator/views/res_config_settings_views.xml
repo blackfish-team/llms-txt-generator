@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.llms_txt_generator</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- After the SEO block, next to robots.txt -->
+            <xpath expr="//setting[@id='robots_setting']/.." position="after">
+                <block title="llms.txt" id="llms_txt_settings" invisible="not website_id">
+                    <field name="llms_txt_has_blog" invisible="1"/>
+                    <field name="llms_txt_has_shop" invisible="1"/>
+                    <setting id="llms_txt_intro_setting" string="Website description"
+                             help="Heading, summary and details shown at the top of /llms.txt.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="col-lg-3 o_light_label" string="Title" for="llms_txt_title"/>
+                                <field name="llms_txt_title" placeholder="Website name"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" string="Summary" for="llms_txt_summary"/>
+                                <field name="llms_txt_summary"
+                                       placeholder="What the website is about, in one or two sentences."/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" string="Details" for="llms_txt_details"/>
+                                <field name="llms_txt_details"
+                                       placeholder="Anything that helps understanding the listed links."/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="llms_txt_sections_setting" string="Listed content"
+                             help="Optional links go to the Optional section, which agents can skip when they need a shorter context.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label class="col-lg-3 o_light_label" string="Pages" for="llms_txt_pages"/>
+                                <field name="llms_txt_pages"/>
+                            </div>
+                            <div class="row mt8" invisible="not llms_txt_has_blog">
+                                <label class="col-lg-3 o_light_label" string="Blog Posts" for="llms_txt_blog"/>
+                                <field name="llms_txt_blog"/>
+                            </div>
+                            <div class="row mt8" invisible="not llms_txt_has_shop">
+                                <label class="col-lg-3 o_light_label" string="Products" for="llms_txt_products"/>
+                                <field name="llms_txt_products"/>
+                            </div>
+                        </div>
+                        <div class="mt8">
+                            <a href="/llms.txt" target="_blank" class="oe_link">
+                                <i class="oi oi-arrow-right"/> Open llms.txt
+                            </a>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

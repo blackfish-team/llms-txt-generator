@@ -21,6 +21,16 @@ def _md_text(text):
     return re.sub(r'([\\\[\]])', r'\\\1', ' '.join(text.split()))
 
 
+# Lines Markdown reads as headings: "#" or a setext "===" / "---" underline
+_MD_HEADING_RE = re.compile(r'^(\s*)(#|=+\s*$|-+\s*$)')
+
+
+def _md_block(text):
+    """Escape headings in free text, as the format reserves them for its own
+    structure (the H1 title and the H2 file lists)."""
+    return "\n".join(_MD_HEADING_RE.sub(r'\1\\\2', line.rstrip()) for line in text.strip().splitlines())
+
+
 class LlmsTxtController(http.Controller):
 
     @http.route('/llms.txt', type='http', auth="public", website=True,
@@ -61,52 +71,60 @@ class LlmsTxtController(http.Controller):
             allowed_company_ids=request.website.company_id.ids,
         )
         env = website.env
-        base_url = website.get_base_url()
         now = fields.Datetime.now()
 
-        content = [
-            "# LLM-Friendly Site Map",
-            "# Following the llmstxt.org guidelines",
-            f"# Base URL: {base_url}",
-            "",
-        ]
+        # Header, in the order of the llmstxt.org format: H1 with the site
+        # name, then a summary quote and free details
+        blocks = [f"# {_md_text(website.llms_txt_title or website.name)}"]
+        if website.llms_txt_summary:
+            blocks.append("\n".join(
+                f"> {line}".rstrip() for line in _md_block(website.llms_txt_summary).splitlines()
+            ))
+        if website.llms_txt_details:
+            blocks.append(_md_block(website.llms_txt_details))
+
+        # File lists, as (mode, heading, records, label)
+        sections = []
 
         # === Pages Section ===
         # Same filters as the sitemap: skip non-indexed, protected and scheduled pages
-        pages = website._get_website_pages([
-            ('website_published', '=', True),
-            ('website_indexed', '=', True),
-            ('visibility', '=', False),
-            '|', ('date_publish', '=', False), ('date_publish', '<=', now),
-        ])
-        if pages:
-            content.append("## Pages")
-            content.extend(self._llms_txt_links(website, pages, "Web page"))
+        if website.llms_txt_pages != 'exclude':
+            pages = website._get_website_pages([
+                ('website_published', '=', True),
+                ('website_indexed', '=', True),
+                ('visibility', '=', False),
+                '|', ('date_publish', '=', False), ('date_publish', '<=', now),
+            ])
+            sections.append((website.llms_txt_pages, "Pages", pages, "Web page"))
 
         # === Blog Posts Section (only if Blog installed) ===
-        if 'blog.post' in env:
+        if website.llms_txt_blog != 'exclude' and 'blog.post' in env:
             posts = env['blog.post'].search([
                 ('website_published', '=', True),
                 ('post_date', '<=', now),
             ])
-            if posts:
-                content.append("\n## Blog Posts")
-                content.extend(self._llms_txt_links(website, posts, "Blog post"))
+            sections.append((website.llms_txt_blog, "Blog Posts", posts, "Blog post"))
 
         # === Products Section (only if eCommerce installed and open to visitors) ===
-        if hasattr(website, 'sale_product_domain') and website.has_ecommerce_access():
+        if (website.llms_txt_products != 'exclude' and hasattr(website, 'sale_product_domain')
+                and website.has_ecommerce_access()):
             products = env['product.template'].search(website.sale_product_domain())
-            if products:
-                content.append("\n## Products")
-                content.extend(self._llms_txt_links(website, products, "Product page"))
+            sections.append((website.llms_txt_products, "Products", products, "Product page"))
 
-        # === Attribution Section ===
-        content.append("\n## Attribution")
-        content.append(
-            "Generated automatically by Clevacat - https://cleva.cat"
-        )
+        # Links agents can skip when they need a shorter context
+        optional = []
+        for mode, heading, records, label in sections:
+            links = list(self._llms_txt_links(website, records, label))
+            if mode == 'optional':
+                optional += links
+            elif links:
+                blocks.append("\n".join([f"## {heading}", *links]))
 
-        return "\n".join(content)
+        # === Attribution ===
+        optional.append("- [Clevacat](https://cleva.cat): Generated automatically by Clevacat")
+        blocks.append("\n".join(["## Optional", *optional]))
+
+        return "\n\n".join(blocks) + "\n"
 
     def _llms_txt_links(self, website, records, label):
         base_url = website.get_base_url()
