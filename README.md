@@ -2,7 +2,7 @@
 
 **SEO-Friendly AI & LLM Indexing File**
 
-The **LLMs.txt Generator** automatically creates a `/llms.txt` file for your Odoo 18 Community website, following the official [llmstxt.org](https://llmstxt.org) guidelines.
+The **LLMs.txt Generator** automatically creates a `/llms.txt` file for your Odoo 19 Community website, following the official [llmstxt.org](https://llmstxt.org) guidelines.
 
 This file makes it easier for *Large Language Models (LLMs)* such as ChatGPT and other AI tools to discover and understand your public content, boosting your website&rsquo;s visibility and discoverability in the AI era.
 
@@ -22,7 +22,7 @@ This file makes it easier for *Large Language Models (LLMs)* such as ChatGPT and
 
 ## 📦 Installation
 
-1. Download and install the module in your Odoo 18 instance.  
+1. Download and install the module in your Odoo 19 instance.  
 2. Activate it from the Apps menu.  
 3. Visit `https://yourdomain.com/llms.txt` to see the generated file.  
 
