@@ -9,7 +9,7 @@ LLMS_TXT_SECTION_MODES = [
 
 # Website fields that change the content of llms.txt
 LLMS_TXT_WEBSITE_FIELDS = {
-    'name', 'domain', 'language_ids', 'default_lang_id', 'company_id', 'ecommerce_access',
+    'name', 'domain', 'language_ids', 'default_lang_id', 'company_id', 'ecommerce_access', 'homepage_url',
     'llms_txt_title', 'llms_txt_summary', 'llms_txt_details',
     'llms_txt_pages', 'llms_txt_blog', 'llms_txt_products',
 }
@@ -23,7 +23,8 @@ class Website(models.Model):
         help="Name shown as the heading of /llms.txt. Defaults to the website name.")
     llms_txt_summary = fields.Text(
         "llms.txt Summary",
-        help="Short summary of the website, shown as a quote below the heading.")
+        help="Short summary of the website, shown as a quote below the heading. "
+             "Defaults to the SEO description of the homepage.")
     llms_txt_details = fields.Text(
         "llms.txt Details",
         help="More detailed information about the website and how to read the listed links.")

@@ -20,7 +20,7 @@
                             <div class="row mt8">
                                 <label class="col-lg-3 o_light_label" string="Summary" for="llms_txt_summary"/>
                                 <field name="llms_txt_summary"
-                                       placeholder="What the website is about, in one or two sentences."/>
+                                       placeholder="Defaults to the SEO description of the homepage."/>
                             </div>
                             <div class="row mt8">
                                 <label class="col-lg-3 o_light_label" string="Details" for="llms_txt_details"/>

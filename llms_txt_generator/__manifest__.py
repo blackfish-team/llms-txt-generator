@@ -12,6 +12,7 @@ Key Features:
 - Published Pages, Blog Posts, and eCommerce Products (if available)
 - Multi-language support
 - Title, summary and details configurable per website, and per-section choice to list, mark as Optional or leave out
+- Links described with their SEO descriptions, or blog subtitles and product descriptions
 - Fully compliant with llmstxt.org specifications
 - SEO attribution with backlink
 

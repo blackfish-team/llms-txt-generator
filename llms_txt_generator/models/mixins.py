@@ -5,13 +5,13 @@ from odoo import api, models
 # change their entry
 LLMS_TXT_MODELS = {'website.page', 'blog.post', 'product.template'}
 LLMS_TXT_FIELDS = {
-    'name', 'active', 'is_published', 'website_published', 'website_id',
+    'name', 'active', 'is_published', 'website_published', 'website_id', 'website_meta_description',
     # website.page
     'url', 'visibility', 'website_indexed', 'date_publish',
     # blog.post
-    'blog_id', 'published_date', 'post_date',
+    'blog_id', 'published_date', 'post_date', 'subtitle', 'teaser', 'teaser_manual', 'content',
     # product.template
-    'sale_ok', 'company_id', 'service_tracking',
+    'sale_ok', 'company_id', 'service_tracking', 'description_sale', 'description_ecommerce',
 }
 
 
