@@ -10,7 +10,7 @@ This file makes it easier for *Large Language Models (LLMs)* such as ChatGPT and
 
 ## 🚀 Features
 
-- Generates an `/llms.txt` file dynamically, refreshed at most once per hour per website.  
+- Generates an `/llms.txt` file dynamically, updated as soon as pages, blog posts or products change.  
 - Includes published web pages, blog posts and eCommerce products, following the same visibility rules as the sitemap: password-protected, members-only, non-indexed and scheduled content is left out.  
 - Multi-language support: generates URLs for all languages enabled on the website.  
 - SEO-friendly format recommended by [llmstxt.org](https://llmstxt.org).  

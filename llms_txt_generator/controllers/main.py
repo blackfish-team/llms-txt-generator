@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import contextlib
 import datetime
 import re
 
@@ -6,8 +7,12 @@ from odoo import fields, http
 from odoo.http import request
 
 # Like sitemap.xml, the file is cached so the public route cannot be used
-# to trigger a full scan of the website on every request.
+# to trigger a full scan of the website on every request. The cache is also
+# cleared when listed content changes; this delay catches what does not go
+# through a write, such as a scheduled page reaching its publishing date.
 LLMS_TXT_CACHE_TIME = datetime.timedelta(hours=1)
+# Seconds browsers and proxies may reuse the response before revalidating
+LLMS_TXT_MAX_AGE = 300
 
 
 def _md_text(text):
@@ -23,32 +28,31 @@ class LlmsTxtController(http.Controller):
     def llms_txt(self):
         website = request.website
         Attachment = request.env['ir.attachment'].sudo()
-        dom = [
-            ('res_model', '=', 'website'), ('res_id', '=', website.id),
-            ('name', '=', 'llms.txt'), ('type', '=', 'binary'),
-        ]
-        content = None
+        dom = website._llms_txt_cache_domain()
         cached = Attachment.search(dom, limit=1)
         if cached and fields.Datetime.now() - cached.create_date < LLMS_TXT_CACHE_TIME:
-            content = cached.raw
-        # Also regenerate when the stored file is missing (e.g. filestore not restored)
-        if not content:
-            Attachment.search(dom).unlink()
-            content = self._llms_txt_content().encode()
-            Attachment.create({
-                'name': 'llms.txt',
-                'type': 'binary',
-                'raw': content,
-                'mimetype': 'text/plain',
-                'res_model': 'website',
-                'res_id': website.id,
-            })
+            # Regenerate below if the stored file is missing (e.g. filestore not restored)
+            with contextlib.suppress(FileNotFoundError):
+                return self._llms_txt_response(cached)
 
-        # Return plain text response
-        return request.make_response(
-            content,
-            headers=[('Content-Type', 'text/plain; charset=utf-8')]
-        )
+        Attachment.search(dom).unlink()
+        attachment = Attachment.create({
+            'name': 'llms.txt',
+            'type': 'binary',
+            'raw': self._llms_txt_content().encode(),
+            'mimetype': 'text/plain',
+            'res_model': 'website',
+            'res_id': website.id,
+        })
+        return self._llms_txt_response(attachment)
+
+    def _llms_txt_response(self, attachment):
+        # Served like /web/content: ETag and Last-Modified let clients
+        # revalidate with a 304, and anonymous responses can be cached by proxies
+        stream = attachment._to_http_stream()
+        stream.max_age = LLMS_TXT_MAX_AGE
+        stream.public = request.env.user._is_public()
+        return stream.get_response()
 
     def _llms_txt_content(self):
         # Generate as the website's public user, so access rules apply and the
