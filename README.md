@@ -10,9 +10,9 @@ This file makes it easier for *Large Language Models (LLMs)* such as ChatGPT and
 
 ## 🚀 Features
 
-- Generates an `/llms.txt` file dynamically.  
-- Includes all published web pages and blog posts.  
-- Multi-language support: generates URLs for all active languages.  
+- Generates an `/llms.txt` file dynamically, refreshed at most once per hour per website.  
+- Includes published web pages, blog posts and eCommerce products, following the same visibility rules as the sitemap: password-protected, members-only, non-indexed and scheduled content is left out.  
+- Multi-language support: generates URLs for all languages enabled on the website.  
 - SEO-friendly format recommended by [llmstxt.org](https://llmstxt.org).  
 - No hardcoding - everything is pulled from your live Odoo site.  
 
